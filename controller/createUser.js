@@ -18,7 +18,8 @@ router.post('/', async (req, res) => {
         // Check if user already exists
         const existingUser = await createUser.findOne({ email })
         if (existingUser) {
-            return res.status(400).send({ message: 'User already exists' });
+            console.log(existingUser, 'user already exists')
+            return res.send({ message: 'User already exists' });
         }
         const user = await createUser.create({
             name,
@@ -26,6 +27,8 @@ router.post('/', async (req, res) => {
             password: encrypted,
             image: imageUrl
         })
+
+        console.log(user)
         
         res.status(200).json({ message: 'Hello from the server!', user });
     } catch (error) {
