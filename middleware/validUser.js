@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
@@ -22,7 +24,7 @@ const verifyToken = (req, res, next) => {
         });
     }
 
-    jwt.verify(token, 'PmhpxQ469cs5E9I26hvvV1MOGriibHl75SG3Q5edsgc', (err, decoded) => {
+    jwt.verify(token, process.env.VERIFY_TOKEN_SECRET_KEY , (err, decoded) => {
         if (err) {
             console.error('Token verification error:', err);
             return res.status(500).send({
