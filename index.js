@@ -15,7 +15,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // Connect to MongoDB
 
-const connectDb = mongoose.connect('mongodb://localhost:27017/chat');
+// const connectDb = mongoose.connect('mongodb://localhost:27017/chat');
+const connectDb = mongoose.connect(`mongodb+srv://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@cluster0.sdyx3bs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/chat`);
 
 
 app.use('/api/signup', createUserRouter)
