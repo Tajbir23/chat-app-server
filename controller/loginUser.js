@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken')
 
 router.post('/', async(req, res) => {
     const {email, password} = req.body
-    
+    console.log(email, password)
     try {
 
         const cipher = crypto.createCipher('aes-256-cbc', process.env.PASSWORD_SECRET_KEY)
