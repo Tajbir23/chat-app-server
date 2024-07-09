@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const jwt = require('jsonwebtoken');
+const findUser = require('../model/createUser');
 
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -18,25 +19,42 @@ const verifyToken = (req, res, next) => {
     console.log('Token:', token);
 
     if (!token) {
-        return res.status(403).send({
+        return res.send({
             auth: false,
             message: 'No token provided.'
         });
     }
 
-    jwt.verify(token, process.env.VERIFY_TOKEN_SECRET_KEY , (err, decoded) => {
-        if (err) {
-            console.error('Token verification error:', err);
-            return res.status(500).send({
-                auth: false,
-                message: 'Failed to authenticate token.'
-            });
-        }
+    try {
+        jwt.verify(token, process.env.VERIFY_TOKEN_SECRET_KEY , async(err, decoded) => {
+            if (err) {
+                console.error('Token verification error:', err);
+                return res.send({
+                    auth: false,
+                    message: 'Failed to authenticate token.'
+                });
+            }
+    
+            console.log('Decoded Token:', decoded);
 
-        console.log('Decoded Token:', decoded);
-        req.userInfo = decoded;
-        next();
-    });
+            const validUser = await findUser.findOne({email: decoded.email});
+
+            if(!validUser || validUser.status === 'blocked'){
+                return res.send({
+                    auth: false,
+                    message: 'User not found.'
+                });
+            }
+
+            req.userInfo = decoded;
+            next();
+        });
+    } catch (error) {
+        res.send({
+            auth: false,
+            message: 'Failed to authenticate token.'
+        })
+    }
 };
 
 module.exports = verifyToken;
