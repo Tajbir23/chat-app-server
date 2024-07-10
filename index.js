@@ -7,6 +7,7 @@ const createUserRouter = require('./controller/createUser');
 const cors = require('cors');
 const loginUser = require('./controller/loginUser');
 const secureTest = require('./controller/testSecure');
+const profile = require('./controller/findUser');
 const port = process.env.PORT || 5000;
 
 const app = express();
@@ -31,7 +32,7 @@ const connectDb = mongoose.connect('mongodb://localhost:27017/chat');
 app.use('/api/signup', createUserRouter)
 app.use('/api/login', loginUser)
 app.use('/api/secure-test',secureTest)
-
+app.use('/api/profile', profile)
 app.get('/', async (req, res) => {
     res.send('API is running...');  // Test endpoint to check if server is running correctly
 })

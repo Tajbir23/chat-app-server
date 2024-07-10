@@ -7,7 +7,8 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     const {name, email, password, image} = req.body
 
-    const imageUrl = 'https://avatars.dicebear.com/api/initials/' + name + '.svg'
+    console.log(image)
+    // const imageUrl = 'https://avatars.dicebear.com/api/initials/' + name + '.svg'
 
     const cipher = crypto.createCipher('aes-256-cbc', process.env.PASSWORD_SECRET_KEY)
     let encrypted = await cipher.update(password, 'utf8', 'base64')
@@ -25,7 +26,7 @@ router.post('/', async (req, res) => {
             name,
             email,
             password: encrypted,
-            image: imageUrl
+            image
         })
 
         console.log(user)
